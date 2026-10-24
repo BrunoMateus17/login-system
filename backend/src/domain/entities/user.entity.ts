@@ -1,4 +1,5 @@
 import { Entity } from '../shared/entity.js';
+import { Utils } from "../../shared/utils/utils.js";
 
 export type UserCreateDto = {
   email: string;
@@ -17,11 +18,12 @@ export class User extends Entity {
     this.validate();
   }
 
-  public static create(email: string, password: string): User {
+  public static async create(email: string, password: string): Promise<User> {
     const id = crypto.randomUUID();
+    const hashedPassword = Utils.encryptPassword(password)
     const createdAt = new Date();
     const updatedAt = new Date();
-    return new User(id, email, password, createdAt, updatedAt);
+    return new User(id, email, await hashedPassword, createdAt, updatedAt);
   }
 
   protected validate(): void {
